@@ -48,7 +48,7 @@ jobs:
       SITE_ADMIN_PASSWORD: admin-password-for-the-tests
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: conda-incubator/setup-miniconda@v3
         with:
