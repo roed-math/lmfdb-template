@@ -1,0 +1,85 @@
+# Sets up a database as in docs/SETUP_POSTGRES.md, loads the example data and
+# runs the tests, on every push and pull request, and once a week.
+#
+# The "latest" job uses lmfdb-utils from the main branch of the LMFDB
+# repository instead of the version in requirements.txt, to give warning of
+# changes there that need changes here (see docs/UPDATING.md); it may fail
+# without anything being wrong with the website.
+name: Tests
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "23 7 * * 1"
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        lmfdb-utils: [requirements, latest]
+    continue-on-error: ${{ matrix.lmfdb-utils == 'latest' }}
+    name: lmfdb-utils from ${{ matrix.lmfdb-utils }}
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      # for psql
+      PGHOST: localhost
+      PGUSER: postgres
+      PGPASSWORD: postgres
+      # an administrator for the tests that log in
+      SITE_TEST_ADMIN: admin
+      SITE_ADMIN_PASSWORD: admin-password-for-the-tests
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: conda-incubator/setup-miniconda@v3
+        with:
+          miniforge-version: latest
+          activate-environment: site
+          environment-file: environment.yml
+          channel-priority: strict
+
+      - name: Install the dependencies
+        shell: bash -l {0}
+        run: pip install -r requirements.txt
+
+      - name: Use lmfdb-utils from the LMFDB's main branch
+        if: matrix.lmfdb-utils == 'latest'
+        shell: bash -l {0}
+        run: pip install --force-reinstall --no-deps "lmfdb-utils @ git+https://github.com/LMFDB/lmfdb@main#subdirectory=packages/lmfdb-utils"
+
+      - name: Create the database and its roles
+        run: psql -v ON_ERROR_STOP=1 -f scripts/create_database.sql
+
+      - name: Write the configuration files
+        run: |
+          printf '[postgresql]\nhost = localhost\nport = 5432\nuser = mysite_owner\npassword = owner-password\ndbname = mysite\n' > owner.ini
+          printf '[postgresql]\nhost = localhost\nport = 5432\nuser = mysite_web\npassword = web-password\ndbname = mysite\n' > config.ini
+
+      - name: Set up the database and load the example data
+        shell: bash -l {0}
+        run: |
+          python scripts/init_db.py --config-file owner.ini --admin admin --full-name "Test Administrator"
+          python scripts/load_example.py --config-file owner.ini
+
+      - name: Run the tests
+        shell: bash -l {0}
+        run: python -m pytest -v -p no:cacheprovider tests

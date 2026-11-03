@@ -1,0 +1,16 @@
+# The website's dependencies, installed into Sage's Python:
+#
+#     sage -pip install -r requirements.txt
+#
+# lmfdb-utils brings the page layout, search tools, statistics, knowls and
+# user accounts shared with the LMFDB (https://www.lmfdb.org), together with
+# flask, psycodict and the PostgreSQL driver.  docs/UPDATING.md explains how
+# to update it.
+#
+# Until lmfdb-utils is published on PyPI it is installed from git; then this
+# line becomes   lmfdb-utils>=0.1,<0.2
+lmfdb-utils @ git+https://github.com/roed-math/lmfdb@lmfdb-utils-web#subdirectory=packages/lmfdb-utils
+# for running the website in production (docs/DEPLOYING.md)
+gunicorn
+# for the tests
+pytest

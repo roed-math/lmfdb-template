@@ -1,0 +1,14 @@
+# Opens pull requests when new versions of the dependencies in
+# requirements.txt (lmfdb-utils in particular) or of the GitHub Actions used
+# in .github/workflows are released; the tests then check them.  See
+# docs/UPDATING.md.
+version: 2
+updates:
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"

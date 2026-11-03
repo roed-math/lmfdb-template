@@ -1,0 +1,12 @@
+/* Styles of the website, added after /style.css (from lmfdb-utils, in the
+   colors of website/colors.py).  Rules here override the ones there. */
+
+#logo img {
+  height: 70px;
+}
+
+.logo-text {
+  font-size: 160%;
+  font-weight: bold;
+  color: white;
+}

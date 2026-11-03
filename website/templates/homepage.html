@@ -1,0 +1,31 @@
+{#- The layout of every page: this fills in the blocks of the layout from
+    lmfdb-utils (header, sidebar, content, footer).  See docs/CUSTOMIZING.md. -#}
+{% extends "lmfdb_utils/layout.html" %}
+
+{#- The logo is set in website/site.py; to show something else, uncomment:
+{% block logo %}
+    <span class="logo-text">{{ site.name }}</span>
+{% endblock %}
+-#}
+
+{#- Links in the top right corner, each followed by &middot; -#}
+{% block undertopright %}
+            <a href="{{ url_for('about') }}">About</a>
+              &middot;
+{% endblock %}
+
+{% block footer %}
+    {% if credit -%}
+      Data computed by {{ credit|safe }}.<br />
+    {%- endif %}
+    {% if support -%}
+      {{ support|safe }}<br/>
+    {%- endif %}
+    <div>
+      <a href="{{ url_for('about') }}">About</a>
+      &middot;
+      <a href="{{ url_for('knowledge.index') }}">Knowledge</a>
+      &middot;
+      Built with the <a href="https://github.com/LMFDB/lmfdb-template">LMFDB website template</a>
+    </div>
+{% endblock %}

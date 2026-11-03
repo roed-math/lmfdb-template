@@ -1,0 +1,13 @@
+# A conda environment with SageMath, for running the website and its tests
+# (used by .github/workflows/tests.yml):
+#
+#     conda env create -f environment.yml
+#     conda activate site
+#     pip install -r requirements.txt
+name: site
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - sage=10.6
+  - pip

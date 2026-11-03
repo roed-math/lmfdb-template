@@ -1,0 +1,19 @@
+{% extends "homepage.html" %}
+{% block content %}
+
+<h2> {{ KNOWL('example.representations', 'Representations') }} as a sum of two squares </h2>
+
+<p>
+  {% if data.num_reps %}
+    ${{ data.n }}$ is the sum of two squares in {{ pluralize(data.num_reps, "way") }}: {{ reps | safe }}.
+    Counting signs and order, there are $r_2({{ data.n }}) = {{ data.r2 }}$ pairs of integers $(x, y)$ with $x^2 + y^2 = {{ data.n }}$.
+  {% else %}
+    ${{ data.n }}$ is not the sum of two squares.
+  {% endif %}
+</p>
+
+<h2> {{ KNOWL('example.factorization', 'Factorization') }} </h2>
+
+<p> ${{ data.n }} = $ {{ factorization | safe }} </p>
+
+{% endblock %}

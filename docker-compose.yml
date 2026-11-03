@@ -1,0 +1,19 @@
+# A PostgreSQL server for developing the website (see docs/SETUP_POSTGRES.md):
+#
+#     docker compose up -d
+#
+# creates the database and roles of scripts/create_database.sql (with its
+# default passwords) the first time it starts, keeping the data in a volume.
+# It listens on localhost:5432, as config.ini expects.
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./scripts/create_database.sql:/docker-entrypoint-initdb.d/create_database.sql:ro
+volumes:
+  pgdata:

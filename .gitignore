@@ -1,0 +1,12 @@
+# Local configuration and credentials (see docs/SETUP_POSTGRES.md)
+config.ini
+secrets.ini
+secret_key
+# Logs
+logs/
+*.log
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+owner.ini

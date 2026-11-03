@@ -1,0 +1,20 @@
+{% extends "homepage.html" %}
+{% block content %}
+
+<p>
+  This is the home page of a website built from the
+  <a href="https://github.com/LMFDB/lmfdb-template">LMFDB website template</a>.
+  Edit <code>website/templates/index.html</code> to change it.
+</p>
+
+<h2> Sections </h2>
+
+<ul>
+  <li> <a href="{{ url_for('example.index') }}">Sums of two squares</a>: the ways of writing
+       $n$ as $x^2 + y^2$, an example of a section with searches, pages for each object,
+       downloads and statistics. </li>
+  <li> The <a href="{{ url_for('knowledge.index') }}">knowledge database</a>: the definitions
+       that appear when you click on a term, such as {{ KNOWL('example.r2', '$r_2(n)$') }}. </li>
+</ul>
+
+{% endblock %}

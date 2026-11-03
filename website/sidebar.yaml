@@ -1,0 +1,28 @@
+# The sidebar menu (see lmfdb_utils/sidebar.py).  Sections are sorted by their
+# keys; each entry links to the Flask endpoint given by url_for (with
+# url_args).  An entry with "status: future" is shown greyed out, one with
+# "status: beta" only on beta (in debug mode).
+
+1intro:
+  type: simple
+  heading:
+    title: Introduction
+  parts:
+    - title: Home
+      url_for: "index"
+    - title: About
+      url_for: "about"
+    - title: Knowledge
+      url_for: "knowledge.index"
+
+2examples:
+  type: simple
+  heading:
+    title: Examples
+  parts:
+    - title: Sums of two squares
+      url_for: "example.index"
+    - title: Statistics
+      url_for: "example.statistics"
+    - title: Something else
+      status: future

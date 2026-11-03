@@ -1,0 +1,61 @@
+# The knowls of the example section, loaded by scripts/load_example.py with
+# knowldb.yaml_import.  Knowls are normally edited on the website
+# (/knowledge); a file like this is a convenient way to ship the first ones.
+# The first record is the time the file was written: knowls changed in the
+# database after that are not overwritten.
+- written: 2026-11-03 20:25:00
+- id: example.n
+  title: integer $n$
+  content: |
+    The positive integer $n$ that is written as a sum of two squares $x^2 + y^2$.
+    It is also the {{ KNOWL('example.label', 'label') }} of its page.
+- id: example.label
+  title: label of an integer
+  content: |
+    The label of a positive integer $n$ in the example section is $n$ itself,
+    written in decimal: for example `65`.
+- id: example.r2
+  title: sum of two squares function $r_2(n)$
+  content: |
+    The number $r_2(n)$ of pairs of integers $(x, y)$ such that $x^2 + y^2 = n$,
+    counting different signs and orders separately.  For example $r_2(5) = 8$,
+    from $(\pm 1, \pm 2)$ and $(\pm 2, \pm 1)$.
+
+    By a theorem of Jacobi, $r_2(n) = 4 (d_1(n) - d_3(n))$, where $d_i(n)$ is
+    the number of divisors of $n$ congruent to $i$ modulo $4$.  In particular
+    $n$ is a sum of two squares if and only if every prime congruent to $3$
+    modulo $4$ divides $n$ to an even power
+    \cite{wikipedia:Sum_of_two_squares_theorem}.
+- id: example.num_reps
+  title: number of representations as a sum of two squares
+  content: |
+    The number of pairs $(x, y)$ with $0 \le x \le y$ and $x^2 + y^2 = n$: the
+    {{ KNOWL('example.representations', 'representations') }} of $n$ up to signs
+    and order.  Compare with {{ KNOWL('example.r2', '$r_2(n)$') }}, which counts
+    signs and orders.
+- id: example.representations
+  title: representation as a sum of two squares
+  content: |
+    A representation of $n$ as a sum of two squares is a pair $(x, y)$ with
+    $0 \le x \le y$ and $x^2 + y^2 = n$.  For example $65 = 1^2 + 8^2 = 4^2 + 7^2$
+    has two.
+- id: example.factorization
+  title: factorization
+  content: |
+    The factorization of $n$ into prime powers $p_1^{e_1} \cdots p_k^{e_k}$, with
+    $p_1 < \cdots < p_k$.
+- id: example.omega
+  title: number of prime factors $\omega(n)$
+  content: |
+    The number $\omega(n)$ of distinct primes dividing $n$.
+- id: example.squarefree
+  title: squarefree
+  content: |
+    An integer $n$ is **squarefree** if no square of a prime divides it, that is,
+    if all the exponents in its {{ KNOWL('example.factorization', 'factorization') }}
+    are $1$.
+- id: rcs.example.source
+  title: Source of the sums of two squares data
+  content: |
+    The representations of each $n$ as a sum of two squares were found by trying
+    every $x$ with $2x^2 \le n$, by `scripts/load_example.py`.
