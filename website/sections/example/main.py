@@ -135,7 +135,15 @@ def example_search(info, query):
     parse_ints(info, query, "num_reps")
     parse_ints(info, query, "omega")
     parse_bool(info, query, "squarefree")
-    parse_bool(info, query, "is_sum", qfield="num_reps", process=lambda x: {"$gt": 0} if x else 0)
+    # "Sum of two squares" is also a condition on num_reps: parse it apart
+    # and keep both conditions, rather than letting it replace the first
+    is_sum = {}
+    parse_bool(info, is_sum, "is_sum", qfield="num_reps", process=lambda x: {"$gt": 0} if x else 0)
+    if is_sum:
+        if "num_reps" in query:
+            query["$and"] = [{"num_reps": query.pop("num_reps")}, is_sum]
+        else:
+            query.update(is_sum)
 
 
 class ExampleSearchArray(SearchArray):
@@ -214,7 +222,8 @@ class ExampleStats(StatsDisplay):
     short_display = {"r2": "r_2(n)", "omega": "omega(n)"}
     top_titles = {"r2": "number of representations", "omega": "number of prime factors"}
     knowls = {"r2": "example.r2", "omega": "example.omega", "squarefree": "example.squarefree"}
-    buckets = {"r2": ["0", "4", "8", "12", "16", "24-32", "36-96"]}
+    # the buckets must cover every value (the last one is open-ended)
+    buckets = {"r2": ["0", "4", "8", "12", "16", "20", "24-32", "36-"]}
     # One-dimensional statistics (a single column) and two-dimensional ones
     # (a grid); see lmfdb_utils/display_stats.py for the options
     stat_list = [

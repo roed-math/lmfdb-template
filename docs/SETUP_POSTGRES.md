@@ -70,11 +70,13 @@ password = owner-password
 dbname = mysite
 ```
 
-Neither file is committed (see `.gitignore`).  To keep the password out of a
-file you share, put a `[postgresql]` section with just `password = ...` in
-`secrets.ini` next to the configuration file: its values override it.  A
-different configuration file for the website can be given with the
-`SITE_CONFIG` environment variable.
+Neither file is committed (see `.gitignore`).  To keep a password out of a
+file you share, leave it out and put a `[postgresql]` section with just
+`password = ...` in the configuration's secrets file, whose values override
+it: `secrets.ini` for `config.ini`, and `owner-secrets.ini` for `owner.ini`
+(in general `<name>-secrets.ini` for `<name>.ini`), so that the two roles keep
+their own passwords.  A different configuration file for the website can be
+given with the `SITE_CONFIG` environment variable.
 
 If PostgreSQL runs on the same machine and you prefer to connect through its
 Unix socket (no password), set `host` to the socket directory, such as

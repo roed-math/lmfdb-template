@@ -60,6 +60,12 @@ def test_search(client):
     # 3, 6 and 7 are the n <= 10 that are not sums of two squares
     page = client.get("/Example/?n=1-10&is_sum=no").get_data(as_text=True)
     assert "3 matches" in page
+    # both conditions on the number of representations apply together
+    def matches(url):
+        return int(re.search(r"(\d+) match", client.get(url).get_data(as_text=True)).group(1))
+    assert matches("/Example/?num_reps=2&is_sum=yes") == matches("/Example/?num_reps=2")
+    assert "No matches" in client.get("/Example/?num_reps=2&is_sum=no").get_data(as_text=True)
+    assert "No matches" in client.get("/Example/?num_reps=0&is_sum=yes").get_data(as_text=True)
     # a search input error is reported on the search page
     page = client.get("/Example/?n=abc").get_data(as_text=True)
     assert "not a valid input" in page
@@ -85,9 +91,15 @@ def test_download(client):
     assert "Example Database" in text  # "downloaded from the Example Database"
 
 
-def test_statistics(client):
+def test_statistics(client, app):
     page = client.get("/Example/stats").get_data(as_text=True)
     assert page.count("Distribution of") == 3
+    # every integer is in one of the buckets of r_2(n)
+    from website import db
+    from website.sections.example.main import ExampleStats
+    with app.test_request_context("/Example/stats"):
+        r2 = ExampleStats().distributions[0]
+    assert sum(cell["count"] for cell in r2["counts"]) == db.example_sums.count()
 
 
 def test_knowls(client):
