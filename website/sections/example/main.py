@@ -135,15 +135,13 @@ def example_search(info, query):
     parse_ints(info, query, "num_reps")
     parse_ints(info, query, "omega")
     parse_bool(info, query, "squarefree")
-    # "Sum of two squares" is also a condition on num_reps: parse it apart
-    # and keep both conditions, rather than letting it replace the first
+    # "Sum of two squares" is also a condition on num_reps: parse it apart and
+    # add it to the conditions already there (the parsers also use $and, for
+    # negated inputs such as n=~25), rather than letting it replace them
     is_sum = {}
     parse_bool(info, is_sum, "is_sum", qfield="num_reps", process=lambda x: {"$gt": 0} if x else 0)
     if is_sum:
-        if "num_reps" in query:
-            query["$and"] = [{"num_reps": query.pop("num_reps")}, is_sum]
-        else:
-            query.update(is_sum)
+        query.setdefault("$and", []).append(is_sum)
 
 
 class ExampleSearchArray(SearchArray):

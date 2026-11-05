@@ -66,6 +66,11 @@ def test_search(client):
     assert matches("/Example/?num_reps=2&is_sum=yes") == matches("/Example/?num_reps=2")
     assert "No matches" in client.get("/Example/?num_reps=2&is_sum=no").get_data(as_text=True)
     assert "No matches" in client.get("/Example/?num_reps=0&is_sum=yes").get_data(as_text=True)
+    # together with a negated condition (which the parsers also put in $and):
+    # 25 = 0^2 + 5^2 = 3^2 + 4^2 stays excluded
+    page = client.get("/Example/?n=~25&num_reps=2&is_sum=yes").get_data(as_text=True)
+    assert 'href="/Example/25"' not in page and 'href="/Example/50"' in page
+    assert matches("/Example/?n=~25&num_reps=2&is_sum=yes") == matches("/Example/?num_reps=2") - 1
     # a search input error is reported on the search page
     page = client.get("/Example/?n=abc").get_data(as_text=True)
     assert "not a valid input" in page
